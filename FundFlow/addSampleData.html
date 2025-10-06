@@ -1,0 +1,236 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Sample Data - FundFlow</title>
+  <script src="firebaseConfig.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #667eea;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #5a6fd8;
+    }
+    .status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border-color: #f5c6cb;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Add Sample Data to FundFlow</h1>
+    <p>This page will add sample campaign data to your Firestore database for testing purposes.</p>
+    
+    <button onclick="addSampleData()">Add Sample Campaigns</button>
+    <button onclick="clearAllData()">Clear All Data</button>
+    <button onclick="viewData()">View Current Data</button>
+    
+    <div id="status"></div>
+  </div>
+
+  <script>
+    const db = firebase.firestore();
+
+    async function addSampleData() {
+      const statusDiv = document.getElementById('status');
+      statusDiv.innerHTML = 'Adding sample data...';
+      statusDiv.className = 'status';
+
+      const sampleCampaigns = [
+        {
+          title: "Help Rahul Recover from Surgery",
+          goal: 50000,
+          category: "Medical",
+          description: "Rahul needs urgent surgery for a heart condition. His family cannot afford the medical expenses. Please help us raise funds for his treatment and recovery. Every contribution matters and will help save a life.",
+          organizer: {
+            name: "Priya Sharma",
+            relation: "Sister",
+            ngo: "Health First Foundation"
+          },
+          status: "published",
+          publishedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          userId: "sample-user-1"
+        },
+        {
+          title: "Education for Underprivileged Children",
+          goal: 25000,
+          category: "Education",
+          description: "We aim to provide quality education to 50 children in rural areas. Funds will be used for books, school supplies, teacher salaries, and infrastructure improvements. Help us build a brighter future for these children.",
+          organizer: {
+            name: "Amit Kumar",
+            relation: "Volunteer",
+            ngo: "Education for All"
+          },
+          status: "published",
+          publishedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          userId: "sample-user-2"
+        },
+        {
+          title: "Animal Shelter Renovation",
+          goal: 30000,
+          category: "Animals",
+          description: "Our local animal shelter needs urgent renovation to provide better care for rescued animals. Help us create a safe haven for our furry friends. The funds will be used for medical supplies, food, and shelter improvements.",
+          organizer: {
+            name: "Sneha Patel",
+            relation: "Volunteer",
+            ngo: "Paws and Claws Rescue"
+          },
+          status: "published",
+          publishedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          userId: "sample-user-3"
+        },
+        {
+          title: "Disaster Relief for Flood Victims",
+          goal: 75000,
+          category: "Disaster Relief",
+          description: "Recent floods have displaced hundreds of families in our community. We need immediate funds for food, shelter, and medical aid. Your contribution will help provide essential supplies and temporary housing for affected families.",
+          organizer: {
+            name: "Rajesh Verma",
+            relation: "Community Leader",
+            ngo: "Disaster Relief Foundation"
+          },
+          status: "published",
+          publishedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          userId: "sample-user-4"
+        },
+        {
+          title: "Support Local Food Bank",
+          goal: 15000,
+          category: "Personal",
+          description: "Our local food bank is running low on supplies and needs immediate support. Help us stock up on essential food items to feed families in need. Every rupee counts in the fight against hunger.",
+          organizer: {
+            name: "Meera Singh",
+            relation: "Volunteer",
+            ngo: ""
+          },
+          status: "published",
+          publishedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          userId: "sample-user-5"
+        },
+        {
+          title: "Draft Campaign - Medical Equipment",
+          goal: 40000,
+          category: "Medical",
+          description: "This is a draft campaign for purchasing medical equipment for a local clinic. Still working on the details and will publish soon.",
+          organizer: {
+            name: "Dr. Anil Gupta",
+            relation: "Doctor",
+            ngo: "Community Health Center"
+          },
+          status: "draft",
+          publishedAt: null,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          userId: "sample-user-6"
+        }
+      ];
+
+      try {
+        for (const campaign of sampleCampaigns) {
+          await db.collection('campaigns').add(campaign);
+        }
+        statusDiv.innerHTML = `Successfully added ${sampleCampaigns.length} sample campaigns to Firestore!`;
+        statusDiv.className = 'status';
+      } catch (error) {
+        statusDiv.innerHTML = `Error adding sample data: ${error.message}`;
+        statusDiv.className = 'status error';
+      }
+    }
+
+    async function clearAllData() {
+      const statusDiv = document.getElementById('status');
+      if (!confirm('Are you sure you want to delete ALL campaign data? This cannot be undone.')) {
+        return;
+      }
+
+      statusDiv.innerHTML = 'Clearing all data...';
+      statusDiv.className = 'status';
+
+      try {
+        const snapshot = await db.collection('campaigns').get();
+        const batch = db.batch();
+        
+        snapshot.docs.forEach(doc => {
+          batch.delete(doc.ref);
+        });
+        
+        await batch.commit();
+        statusDiv.innerHTML = `Successfully deleted ${snapshot.docs.length} campaigns from Firestore!`;
+        statusDiv.className = 'status';
+      } catch (error) {
+        statusDiv.innerHTML = `Error clearing data: ${error.message}`;
+        statusDiv.className = 'status error';
+      }
+    }
+
+    async function viewData() {
+      const statusDiv = document.getElementById('status');
+      statusDiv.innerHTML = 'Loading data...';
+      statusDiv.className = 'status';
+
+      try {
+        const snapshot = await db.collection('campaigns').get();
+        const campaigns = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        let html = `<h3>Current Campaigns (${campaigns.length}):</h3>`;
+        campaigns.forEach(campaign => {
+          html += `
+            <div style="border: 1px solid #ddd; margin: 10px 0; padding: 15px; border-radius: 5px;">
+              <strong>${campaign.title}</strong> - ${campaign.status}<br>
+              Goal: ₹${campaign.goal.toLocaleString()}<br>
+              Category: ${campaign.category}<br>
+              Organizer: ${campaign.organizer.name}
+            </div>
+          `;
+        });
+
+        statusDiv.innerHTML = html;
+        statusDiv.className = 'status';
+      } catch (error) {
+        statusDiv.innerHTML = `Error loading data: ${error.message}`;
+        statusDiv.className = 'status error';
+      }
+    }
+  </script>
+</body>
+</html> -->

@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - FundFlow</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel=\"stylesheet\" href=\"monetization.css\">
+  <script src="frontend.js" defer></script>
+  <script src="backend.js" defer></script>
+  <script src="premium.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore-compat.js"></script>
+</head>
+
+<body>
+  <nav class="admin-nav">
+    <img src="photos/logo.png" alt="FundFlow" class="brand-logo">
+    <div class="nav-center">
+      <h2>Admin Dashboard</h2>
+    </div>
+    <div class="nav-right">
+      <span id="admin-name">Admin</span>
+      <button id="admin-logout" class="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <div class="admin-container">
+    <div class="admin-sidebar">
+      <div class="sidebar-menu">
+        <button class="menu-item active" data-tab="verification">
+          🏆 Verification Requests
+          <span class="notification-badge" id="verification-count">0</span>
+        </button>
+        <button class="menu-item" data-tab="campaigns">📊 All Campaigns</button>
+        <button class="menu-item" data-tab="donations">💰 Donation Analytics</button>
+        <button class="menu-item" data-tab="users">👥 User Management</button>
+        <button class="menu-item" data-tab="settings">⚙️ Settings</button>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <!-- Verification Requests Tab -->
+      <div id="verification-tab" class="admin-tab active">
+        <div class="tab-header">
+          <h2>Premium Verification Requests</h2>
+          <div class="stats-cards">
+            <div class="stat-card">
+              <div class="stat-number" id="pending-requests">0</div>
+              <div class="stat-label">Pending Requests</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="approved-today">0</div>
+              <div class="stat-label">Approved Today</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="revenue-today">₹0</div>
+              <div class="stat-label">Revenue Today</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="verification-filters">
+          <select id="status-filter">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+          <select id="tier-filter">
+            <option value="all">All Tiers</option>
+            <option value="basic">Basic Verification</option>
+            <option value="premium">Premium Verification</option>
+            <option value="organization">Organization Verification</option>
+          </select>
+          <input type="date" id="date-filter">
+          <button id="refresh-requests" class="refresh-btn">🔄 Refresh</button>
+        </div>
+
+        <div class="verification-requests" id="verification-requests-list">
+          <div class="loading">Loading verification requests...</div>
+        </div>
+      </div>
+
+      <!-- Campaigns Tab -->
+      <div id="campaigns-tab" class="admin-tab">
+        <div class="tab-header">
+          <h2>Campaign Management</h2>
+          <div class="campaign-stats">
+            <div class="stat-card">
+              <div class="stat-number" id="total-campaigns">0</div>
+              <div class="stat-label">Total Campaigns</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="verified-campaigns">0</div>
+              <div class="stat-label">Verified Campaigns</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="active-campaigns">0</div>
+              <div class="stat-label">Active Campaigns</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="campaigns-list" id="campaigns-list">
+          <div class="loading">Loading campaigns...</div>
+        </div>
+      </div>
+
+      <!-- Other tabs content placeholder -->
+      <div id="donations-tab" class="admin-tab">
+        <h2>Donation Analytics</h2>
+        <p>Donation analytics and revenue tracking will be implemented here.</p>
+      </div>
+
+      <div id="users-tab" class="admin-tab">
+        <h2>User Management</h2>
+        <p>User management features will be implemented here.</p>
+      </div>
+
+      <div id="settings-tab" class="admin-tab">
+        <h2>Settings</h2>
+        <p>Admin settings and configuration options will be implemented here.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verification Review Modal -->
+  <div id="review-modal" class="verification-modal">
+    <div class="verification-modal-content">
+      <button id="close-review-modal" class="verification-close-btn">&times;</button>
+      
+      <div class="review-header">
+        <h2>Review Verification Request</h2>
+        <div class="request-info" id="request-info">
+          <!-- Request details will be populated here -->
+        </div>
+      </div>
+
+      <div class="review-content">
+        <div class="applicant-details" id="applicant-details">
+          <!-- Applicant details will be populated here -->
+        </div>
+
+        <div class="documents-section">
+          <h3>Uploaded Documents</h3>
+          <div class="documents-list" id="documents-list">
+            <!-- Documents will be populated here -->
+          </div>
+        </div>
+
+        <div class="review-actions">
+          <div class="review-notes">
+            <label for="review-notes">Review Notes (Optional)</label>
+            <textarea id="review-notes" placeholder="Add any notes about this verification request..."></textarea>
+          </div>
+          
+          <div class="action-buttons">
+            <button id="reject-request" class="btn-danger">❌ Reject</button>
+            <button id="approve-request" class="btn-success">✅ Approve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Admin Dashboard functionality
+    class AdminDashboard {
+      constructor() {
+        this.currentTab = 'verification';
+        this.verificationRequests = [];
+        this.currentRequest = null;
+        this.init();
+      }
+
+      init() {
+        this.attachEventListeners();
+        this.loadVerificationRequests();
+      }
+
+      attachEventListeners() {
+        // Tab switching
+        document.querySelectorAll('.menu-item').forEach(item => {
+          item.onclick = (e) => {
+            const tab = e.target.dataset.tab;
+            this.switchTab(tab);
+          };
+        });
+
+        // Refresh button
+        document.getElementById('refresh-requests').onclick = () => {
+          this.loadVerificationRequests();
+        };
+
+        // Filters
+        document.getElementById('status-filter').onchange = () => this.filterRequests();
+        document.getElementById('tier-filter').onchange = () => this.filterRequests();
+        document.getElementById('date-filter').onchange = () => this.filterRequests();
+
+        // Review modal
+        document.getElementById('close-review-modal').onclick = () => this.closeReviewModal();
+        document.getElementById('approve-request').onclick = () => this.approveRequest();
+        document.getElementById('reject-request').onclick = () => this.rejectRequest();
+      }
+
+      switchTab(tab) {
+        // Update menu
+        document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+        document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+
+        // Update content
+        document.querySelectorAll('.admin-tab').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(`${tab}-tab`).classList.add('active');
+
+        this.currentTab = tab;
+
+        // Load tab-specific data
+        if (tab === 'verification') {
+          this.loadVerificationRequests();
+        } else if (tab === 'campaigns') {
+          this.loadCampaigns();
+        }
+      }
+
+      async loadVerificationRequests() {
+        const container = document.getElementById('verification-requests-list');
+        container.innerHTML = '<div class="loading">Loading verification requests...</div>';
+
+        // Simulate loading verification requests (in real app, load from database)
+        setTimeout(() => {
+          this.verificationRequests = this.generateMockVerificationRequests();
+          this.displayVerificationRequests(this.verificationRequests);
+          this.updateStats();
+        }, 1000);
+      }
+
+      generateMockVerificationRequests() {
+        const requests = [];
+        const tiers = ['basic', 'premium', 'organization'];
+        const statuses = ['pending', 'approved', 'rejected'];
+        const names = ['Rahul Sharma', 'Priya Patel', 'NGO Hope Foundation', 'Medical Aid Society', 'Amit Kumar'];
+
+        for (let i = 0; i < 15; i++) {
+          const tier = tiers[Math.floor(Math.random() * tiers.length)];
+          const status = i < 8 ? 'pending' : statuses[Math.floor(Math.random() * statuses.length)];
+          const tierPrices = { basic: 499, premium: 999, organization: 1999 };
+          
+          requests.push({
+            id: `req-${i + 1}`,
+            applicantName: names[Math.floor(Math.random() * names.length)],
+            email: `user${i + 1}@example.com`,
+            phone: `+91 ${Math.floor(Math.random() * 9000000000 + 1000000000)}`,
+            campaignTitle: `Campaign Title ${i + 1}`,
+            tier: tier,
+            price: tierPrices[tier],
+            status: status,
+            submittedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
+            documents: ['id-proof.pdf', 'address-proof.jpg', 'campaign-image.png']
+          });
+        }
+
+        return requests.sort((a, b) => b.submittedAt - a.submittedAt);
+      }
+
+      displayVerificationRequests(requests) {
+        const container = document.getElementById('verification-requests-list');
+        
+        if (requests.length === 0) {
+          container.innerHTML = '<div class="no-requests">No verification requests found.</div>';
+          return;
+        }
+
+        container.innerHTML = requests.map(request => {
+          const statusClass = request.status === 'pending' ? 'pending' : 
+                             request.status === 'approved' ? 'approved' : 'rejected';
+          const tierLabels = { basic: 'Basic', premium: 'Premium', organization: 'Organization' };
+          
+          return `
+            <div class="verification-request-card" data-id="${request.id}">
+              <div class="request-header">
+                <div class="request-basic-info">
+                  <h3>${request.applicantName}</h3>
+                  <p class="campaign-title">${request.campaignTitle}</p>
+                  <span class="tier-badge tier-${request.tier}">${tierLabels[request.tier]} Verification</span>
+                </div>
+                <div class="request-status">
+                  <span class="status-badge ${statusClass}">${request.status.toUpperCase()}</span>
+                  <div class="request-amount">₹${request.price.toLocaleString()}</div>
+                </div>
+              </div>
+              
+              <div class="request-details">
+                <div class="detail-item">
+                  <span class="label">Email:</span>
+                  <span class="value">${request.email}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Phone:</span>
+                  <span class="value">${request.phone}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Submitted:</span>
+                  <span class="value">${request.submittedAt.toLocaleDateString()}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Documents:</span>
+                  <span class="value">${request.documents.length} files uploaded</span>
+                </div>
+              </div>
+
+              <div class="request-actions">
+                ${request.status === 'pending' ? `
+                  <button onclick="adminDashboard.reviewRequest('${request.id}')" class="btn-review">
+                    📋 Review Request
+                  </button>
+                  <button onclick="adminDashboard.quickApprove('${request.id}')" class="btn-quick-approve">
+                    ✅ Quick Approve
+                  </button>
+                  <button onclick="adminDashboard.quickReject('${request.id}')" class="btn-quick-reject">
+                    ❌ Quick Reject
+                  </button>
+                ` : `
+                  <button onclick="adminDashboard.viewRequest('${request.id}')" class="btn-view">
+                    👁️ View Details
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      filterRequests() {
+        const statusFilter = document.getElementById('status-filter').value;
+        const tierFilter = document.getElementById('tier-filter').value;
+        const dateFilter = document.getElementById('date-filter').value;
+
+        let filtered = this.verificationRequests.filter(request => {
+          const matchesStatus = statusFilter === 'all' || request.status === statusFilter;
+          const matchesTier = tierFilter === 'all' || request.tier === tierFilter;
+          const matchesDate = !dateFilter || request.submittedAt.toDateString() === new Date(dateFilter).toDateString();
+          
+          return matchesStatus && matchesTier && matchesDate;
+        });
+
+        this.displayVerificationRequests(filtered);
+      }
+
+      updateStats() {
+        const pendingCount = this.verificationRequests.filter(r => r.status === 'pending').length;
+        const approvedToday = this.verificationRequests.filter(r => {
+          const today = new Date().toDateString();
+          return r.status === 'approved' && r.submittedAt.toDateString() === today;
+        }).length;
+        
+        const revenueToday = this.verificationRequests
+          .filter(r => {
+            const today = new Date().toDateString();
+            return r.status === 'approved' && r.submittedAt.toDateString() === today;
+          })
+          .reduce((sum, r) => sum + r.price, 0);
+
+        document.getElementById('pending-requests').textContent = pendingCount;
+        document.getElementById('approved-today').textContent = approvedToday;
+        document.getElementById('revenue-today').textContent = `₹${revenueToday.toLocaleString()}`;
+        document.getElementById('verification-count').textContent = pendingCount;
+      }
+
+      reviewRequest(requestId) {
+        this.currentRequest = this.verificationRequests.find(r => r.id === requestId);
+        if (!this.currentRequest) return;
+
+        this.openReviewModal();
+      }
+
+      openReviewModal() {
+        const request = this.currentRequest;
+        const tierLabels = { basic: 'Basic Verification', premium: 'Premium Verification', organization: 'Organization Verification' };
+        
+        // Populate request info
+        document.getElementById('request-info').innerHTML = `
+          <div class="request-summary">
+            <h3>${request.applicantName}</h3>
+            <span class="tier-badge tier-${request.tier}">${tierLabels[request.tier]}</span>
+            <div class="request-meta">
+              <span>Amount: ₹${request.price.toLocaleString()}</span>
+              <span>Submitted: ${request.submittedAt.toLocaleDateString()}</span>
+            </div>
+          </div>
+        `;
+
+        // Populate applicant details
+        document.getElementById('applicant-details').innerHTML = `
+          <div class="details-grid">
+            <div class="detail-row">
+              <label>Campaign Title:</label>
+              <span>${request.campaignTitle}</span>
+            </div>
+            <div class="detail-row">
+              <label>Email:</label>
+              <span>${request.email}</span>
+            </div>
+            <div class="detail-row">
+              <label>Phone:</label>
+              <span>${request.phone}</span>
+            </div>
+            <div class="detail-row">
+              <label>Verification Tier:</label>
+              <span>${tierLabels[request.tier]}</span>
+            </div>
+          </div>
+        `;
+
+        // Populate documents
+        document.getElementById('documents-list').innerHTML = request.documents.map(doc => `
+          <div class="document-item">
+            <span class="document-name">${doc}</span>
+            <button class="view-document-btn">📁 View</button>
+          </div>
+        `).join('');
+
+        document.getElementById('review-modal').classList.add('active');
+      }
+
+      closeReviewModal() {
+        document.getElementById('review-modal').classList.remove('active');
+        document.getElementById('review-notes').value = '';
+        this.currentRequest = null;
+      }
+
+      async approveRequest() {
+        if (!this.currentRequest) return;
+
+        const notes = document.getElementById('review-notes').value.trim();
+        
+        // Simulate API call
+        console.log(`Approving request ${this.currentRequest.id} with notes: ${notes}`);
+        
+        // Update request status
+        this.currentRequest.status = 'approved';
+        this.currentRequest.reviewedAt = new Date();
+        this.currentRequest.reviewNotes = notes;
+
+        // Apply verification to the user (simulate)
+        this.applyVerificationToUser(this.currentRequest);
+
+        // Close modal and refresh
+        this.closeReviewModal();
+        this.displayVerificationRequests(this.verificationRequests);
+        this.updateStats();
+
+        alert(`Verification request approved successfully! ${this.currentRequest.applicantName} is now verified with ${this.currentRequest.tier} tier.`);
+      }
+
+      async rejectRequest() {
+        if (!this.currentRequest) return;
+
+        const notes = document.getElementById('review-notes').value.trim();
+        if (!notes) {
+          alert('Please provide a reason for rejection in the notes.');
+          return;
+        }
+        
+        // Simulate API call
+        console.log(`Rejecting request ${this.currentRequest.id} with notes: ${notes}`);
+        
+        // Update request status
+        this.currentRequest.status = 'rejected';
+        this.currentRequest.reviewedAt = new Date();
+        this.currentRequest.reviewNotes = notes;
+
+        // Close modal and refresh
+        this.closeReviewModal();
+        this.displayVerificationRequests(this.verificationRequests);
+        this.updateStats();
+
+        alert('Verification request rejected.');
+      }
+
+      async quickApprove(requestId) {
+        if (!confirm('Are you sure you want to quickly approve this request?')) return;
+        
+        const request = this.verificationRequests.find(r => r.id === requestId);
+        if (request) {
+          request.status = 'approved';
+          request.reviewedAt = new Date();
+          this.displayVerificationRequests(this.verificationRequests);
+          this.updateStats();
+          alert('Request approved successfully!');
+        }
+      }
+
+      async quickReject(requestId) {
+        const reason = prompt('Please provide a reason for rejection:');
+        if (!reason) return;
+        
+        const request = this.verificationRequests.find(r => r.id === requestId);
+        if (request) {
+          request.status = 'rejected';
+          request.reviewedAt = new Date();
+          request.reviewNotes = reason;
+          this.displayVerificationRequests(this.verificationRequests);
+          this.updateStats();
+          alert('Request rejected.');
+        }
+      }
+
+      viewRequest(requestId) {
+        this.currentRequest = this.verificationRequests.find(r => r.id === requestId);
+        if (this.currentRequest) {
+          this.openReviewModal();
+        }
+      }
+
+      async loadCampaigns() {
+        // Placeholder for campaign loading
+        const container = document.getElementById('campaigns-list');
+        container.innerHTML = '<div class="loading">Campaign management features coming soon...</div>';
+      }
+
+      // Method to apply verification to user after approval
+      applyVerificationToUser(request) {
+        // In a real application, this would update the user's verification status in the database
+        // For demo purposes, we'll apply verification to elements on current page if they exist
+        
+        // Store verification in localStorage for demo (in real app, this would be in database)
+        const verifiedUsers = JSON.parse(localStorage.getItem('verifiedUsers') || '{}');
+        verifiedUsers[request.email] = {
+          tier: request.tier,
+          applicantName: request.applicantName,
+          verifiedAt: new Date().toISOString()
+        };
+        localStorage.setItem('verifiedUsers', JSON.stringify(verifiedUsers));
+        
+        console.log(`Applied ${request.tier} verification to user: ${request.applicantName} (${request.email})`);
+        
+        // If premium manager is available, mark user as verified
+        if (window.premiumManager) {
+          // Create a mock user ID based on email
+          const userId = btoa(request.email).substr(0, 8);
+          window.premiumManager.markUserAsVerified(userId, request.tier);
+        }
+      }
+    }
+
+    // Initialize admin dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+      window.adminDashboard = new AdminDashboard();
+    });
+  </script>
+
+  <style>
+    /* Admin Dashboard Specific Styles */
+    .admin-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: linear-gradient(135deg, #01387A 0%, #0056b3 100%);
+      color: white;
+      box-shadow: 0 2px 10px rgba(1, 56, 122, 0.1);
+    }
+
+    .admin-nav h2 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logout-btn {
+      padding: 8px 16px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    .admin-container {
+      display: flex;
+      min-height: calc(100vh - 80px);
+    }
+
+    .admin-sidebar {
+      width: 250px;
+      background: #FAFAF9;
+      border-right: 1px solid #e1e8ed;
+      padding: 20px 0;
+    }
+
+    .sidebar-menu {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 20px;
+      border: none;
+      background: none;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 1rem;
+      color: #2c3e50;
+    }
+
+    .menu-item:hover {
+      background: #e9ecef;
+    }
+
+    .menu-item.active {
+      background: #01387A;
+      color: white;
+    }
+
+    .notification-badge {
+      background: #e74c3c;
+      color: white;
+      border-radius: 50%;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .admin-content {
+      flex: 1;
+      padding: 30px;
+      background: white;
+    }
+
+    .admin-tab {
+      display: none;
+    }
+
+    .admin-tab.active {
+      display: block;
+    }
+
+    .tab-header {
+      margin-bottom: 30px;
+    }
+
+    .tab-header h2 {
+      margin: 0 0 20px 0;
+      color: #2c3e50;
+      font-size: 1.8rem;
+    }
+
+    .stats-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #01387A 0%, #667eea 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .verification-filters {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 25px;
+      align-items: center;
+    }
+
+    .verification-filters select,
+    .verification-filters input {
+      padding: 10px 15px;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .refresh-btn {
+      padding: 10px 20px;
+      background: #01387A;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    .refresh-btn:hover {
+      background: #0056b3;
+    }
+
+    .verification-request-card {
+      background: white;
+      border: 1px solid #e1e8ed;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s;
+    }
+
+    .verification-request-card:hover {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .request-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 15px;
+    }
+
+    .request-basic-info h3 {
+      margin: 0 0 5px 0;
+      color: #2c3e50;
+      font-size: 1.2rem;
+    }
+
+    .campaign-title {
+      margin: 0 0 10px 0;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .tier-badge.tier-basic {
+      background: #27ae60;
+    }
+
+    .tier-badge.tier-premium {
+      background: #f39c12;
+    }
+
+    .tier-badge.tier-organization {
+      background: #9b59b6;
+    }
+
+    .request-status {
+      text-align: right;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .status-badge.pending {
+      background: #f39c12;
+      color: white;
+    }
+
+    .status-badge.approved {
+      background: #27ae60;
+      color: white;
+    }
+
+    .status-badge.rejected {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .request-amount {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    .request-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .detail-item .label {
+      font-size: 0.8rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .detail-item .value {
+      font-size: 0.9rem;
+      color: #2c3e50;
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-review,
+    .btn-quick-approve,
+    .btn-quick-reject,
+    .btn-view {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-review {
+      background: #01387A;
+      color: white;
+    }
+
+    .btn-review:hover {
+      background: #0056b3;
+    }
+
+    .btn-quick-approve {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-quick-approve:hover {
+      background: #219a52;
+    }
+
+    .btn-quick-reject {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-quick-reject:hover {
+      background: #c0392b;
+    }
+
+    .btn-view {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .btn-view:hover {
+      background: #7f8c8d;
+    }
+
+    /* Review Modal Styles */
+    .review-header {
+      padding: 30px 40px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .review-header h2 {
+      margin: 0 0 20px 0;
+      color: #2c3e50;
+    }
+
+    .request-summary {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .request-meta {
+      display: flex;
+      gap: 20px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .review-content {
+      padding: 30px 40px;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .detail-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .detail-row label {
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 0.9rem;
+    }
+
+    .detail-row span {
+      color: #666;
+    }
+
+    .documents-section {
+      margin-bottom: 30px;
+    }
+
+    .documents-section h3 {
+      margin: 0 0 15px 0;
+      color: #2c3e50;
+    }
+
+    .document-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    .view-document-btn {
+      padding: 5px 10px;
+      background: #01387A;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+
+    .review-actions {
+      border-top: 1px solid #eee;
+      padding-top: 20px;
+    }
+
+    .review-notes {
+      margin-bottom: 20px;
+    }
+
+    .review-notes label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #2c3e50;
+    }
+
+    .review-notes textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .btn-success,
+    .btn-danger {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-success {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-success:hover {
+      background: #219a52;
+    }
+
+    .btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .loading,
+    .no-requests {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .admin-container {
+        flex-direction: column;
+      }
+
+      .admin-sidebar {
+        width: 100%;
+      }
+
+      .sidebar-menu {
+        flex-direction: row;
+        overflow-x: auto;
+      }
+
+      .menu-item {
+        white-space: nowrap;
+        min-width: 150px;
+      }
+
+      .admin-content {
+        padding: 20px;
+      }
+
+      .verification-filters {
+        flex-wrap: wrap;
+      }
+
+      .stats-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .request-details {
+        grid-template-columns: 1fr;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</body>
+</html>

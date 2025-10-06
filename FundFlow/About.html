@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us - FundFlow</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="monetization.css" />
+  <script src="frontend.js" defer></script>
+  <script src="backend.js" defer></script>
+  <script src="donation.js" defer></script>
+  <script src="premium.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <!-- Firebase UI (for auth modal styling consistency) -->
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />
+</head>
+<body>
+  <!-- Navigation (matches site style) -->
+  <nav>
+    <img src="photos/logo.png" alt="FundFlow" class="brand-logo" />
+    <div class="nav-center">
+      <a href="Homepage.html">Home</a>
+      <a class="search"><img src="photos/search.png" alt="Search Icon"> search</a>
+      <a>donate</a>
+      <a class="about" href="About.html">about <img src="photos/triangle-arrow.png" alt="About Arrow"></a>
+      <a id="auth-link">
+        <span id="nav-username">Signup / Login</span>
+        <img id="logout-icon" src="photos/logouticon.png" alt="Logout">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="auth-modal">
+    <div class="auth-modal-content">
+      <button id="close-auth-modal" class="auth-close-btn">&times;</button>
+      <div id="user-info"></div>
+      <button id="logout-btn" style="display:none;">Logout</button>
+      <div id="auth-container"></div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header class="about-hero">
+    <div class="about-container">
+      <h1>About Us</h1>
+      <p>We’re building a future where every genuine need is heard —
+        and every helping hand creates real change.</p>
+    </div>
+  </header>
+
+  <main class="about-main">
+    <!-- Who We Are -->
+    <section class="about-section">
+      <div class="about-container about-grid">
+        <div>
+          <h2>Who We Are</h2>
+          <p>
+            We are a team of dreamers, doers, and believers who understand that kindness has the power to change lives.
+            Our platform was born out of a simple idea: every individual should have the chance to raise funds for causes
+            that matter to them, without barriers or hidden costs.
+          </p>
+          <p>
+            Whether it’s a medical emergency, education need, animal welfare, or community project, we believe no dream is
+            too small and no story is unheard.
+          </p>
+        </div>
+        <div class="about-visual">
+          <img src="photos/team-illustration.png" alt="Team" onerror="this.style.display='none'" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission -->
+    <section class="about-section alt">
+      <div class="about-container">
+        <h2>Our Mission</h2>
+        <p class="lead">
+          Our mission is to make crowdfunding simple, transparent, and accessible to everyone.
+          We connect people who want to make a difference with those who need help. By removing unnecessary fees and
+          building trust, we ensure that your support goes where it’s needed most.
+        </p>
+
+        <div class="values-grid">
+          <div class="value-item">
+            <div class="value-emoji">🔎</div>
+            <h3>Transparency</h3>
+            <p>Every campaign is reviewed and every rupee is traceable.</p>
+          </div>
+          <div class="value-item">
+            <div class="value-emoji">🛡️</div>
+            <h3>Trust</h3>
+            <p>We verify campaigns to protect donors and beneficiaries.</p>
+          </div>
+          <div class="value-item">
+            <div class="value-emoji">💙</div>
+            <h3>Compassion</h3>
+            <p>Every story matters, and we give it a platform to be heard.</p>
+          </div>
+          <div class="value-item">
+            <div class="value-emoji">♿</div>
+            <h3>Accessibility</h3>
+            <p>Simple tools with no technical knowledge required.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why we built -->
+    <section class="about-section">
+      <div class="about-container">
+        <h2>Why We Built This Platform</h2>
+        <ul class="checklist">
+          <li>Allowing anyone to start a campaign in minutes.</li>
+          <li>Making the donation process secure and effortless.</li>
+          <li>Ensuring fast payouts to beneficiaries.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- How we are different -->
+    <section class="about-section alt">
+      <div class="about-container">
+        <h2>How We Are Different</h2>
+        <ul class="diff-list">
+          <li><strong>🎯 0% platform fee</strong> — Unlike other platforms, we don't take a cut. Every single rupee goes directly to your campaign!</li>
+          <li>Real-time campaign tracking and updates.</li>
+          <li>Secure, encrypted payment gateways.</li>
+          <li>Empowering communities to support locally and globally.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CTA / Together -->
+    <section class="about-cta">
+      <img src="photos/impactimg1.png" alt="Background Impact" class="background-img" style="position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.4; z-index: -1;">
+      <div class="about-container">
+        <h2>Together, We Create Change</h2>
+        <p>
+          A single donation may be small, but when thousands come together, lives are transformed.
+          By being part of our platform, you’re not just giving money — you’re giving hope, strength, and a second chance.
+        </p>
+        <a href="Start-a-camp.html" class="cta-btn">Start a Campaign</a>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (same as site) -->
+  <footer>
+    <div class="footer-links">
+      <a href="About.html">About</a>
+      <a href="#">FAQs</a>
+      <a href="#">Contact</a>
+      <a href="#">Terms</a>
+      <a href="#">Privacy</a>
+    </div>
+    <div class="footer-social">
+      <a href="#"><img src="photos/icon-facebook.png" alt="Facebook"></a>
+      <a href="#"><img src="photos/icon-twitter.png" alt="Twitter"></a>
+      <a href="#"><img src="photos/icon-instagram.png" alt="Instagram"></a>
+    </div>
+    <div class="footer-tagline">Together, we fund hope.</div>
+    <div class="footer-credits">&copy; 2025 FundFlow. All rights reserved.</div>
+  </footer>
+</body>
+</html>
