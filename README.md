@@ -2,8 +2,7 @@
 
 ### FundFlow – Crowdfunding Platform 🚀
 Overview
-![WhatsApp Image 2025-09-28 at 15 28 25](https://github.com/user-attachments/assets/4c1b6051-5fdf-46f1-8f9e-f1c8e454ce7d)
-
+link - fundflow-483730.netlify.app
 
 FundFlow is a web-based crowdfunding platform designed to help individuals, families, and organizations raise funds for urgent and meaningful causes. Our platform focuses on trust, transparency, and accessibility, allowing users to create campaigns, share their stories, and collect donations with 0% platform fees. Optional donor tips and premium campaign features help sustain the platform while providing additional visibility for campaign creators.
 
