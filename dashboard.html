@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,19 +25,25 @@
     <a href="index.html" class="logo-link">
       <img src="photos/logo.png" alt="FundFlow" class="brand-logo">
     </a>
-    
+
     <div class="nav-center">
-      <a href="index.html">Home</a>
-      <a class="search"><img src="photos/search.png" alt="Search Icon"> search</a>
-      <a>donate</a>
-      <a class="about" href="about.html">about <img src="photos/triangle-arrow.png" alt="About Arrow"></a>
-      <a id="auth-link">
-        <span id="nav-username">Signup / Login</span>
-        <img id="logout-icon" src="photos/logouticon.png" alt="Logout">
-      </a>
+      <div class="nav-side left">
+        <a href="index.html">Home</a>
+        <a class="search"><img src="photos/search.png" alt="Search Icon"> search</a>
+        <a href="#">donate</a>
+      </div>
+
+      <a href="start-a-camp.html" class="start-camp">Start a Campaign</a>
+
+      <div class="nav-side right">
+        <a class="about" href="about.html">about <img src="photos/triangle-arrow.png" alt="About Arrow"></a>
+        <a id="auth-link">
+          <span id="nav-username">Signup / Login</span>
+          <img id="logout-icon" src="photos/logouticon.png" alt="Logout">
+        </a>
+      </div>
     </div>
-    
-    <!-- Menu icon moved outside nav-center -->
+
     <a href="admin-dashboard.html">
       <img src="photos/menu.png" alt="Menu Icon" class="menu-icon">
     </a>
@@ -67,7 +74,8 @@
         <div class="search-section">
           <div class="search-container">
             <img src="photos/search.png" alt="Search Icon" class="search-icon">
-            <input type="text" id="myCampaignSearch" placeholder="Search my campaigns by title, category, description or location..." class="search-input">
+            <input type="text" id="myCampaignSearch"
+              placeholder="Search my campaigns by title, category, description or location..." class="search-input">
             <button id="myClearSearch" class="clear-search-btn" style="display: none;">&times;</button>
           </div>
           <div class="search-filters">
@@ -107,9 +115,9 @@
 
   <script>
     // Dashboard functionality
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // Check authentication first
-      firebase.auth().onAuthStateChanged(function(user) {
+      firebase.auth().onAuthStateChanged(function (user) {
         if (user) {
           // User is logged in, show dashboard
           document.querySelector('.dashboard-main').style.display = 'block';
@@ -130,10 +138,10 @@
     async function loadMyCampaigns() {
       const container = document.getElementById('myCampaignsList');
       const user = firebase.auth().currentUser;
-      
+
       console.log('Loading my campaigns...');
       console.log('Current user:', user);
-      
+
       if (!user) {
         container.innerHTML = '<div class="no-campaigns">Please log in to view your campaigns.</div>';
         return;
@@ -165,13 +173,13 @@
       if (!searchInput) return;
       mySearchSetup = true;
 
-      searchInput.addEventListener('input', function() {
+      searchInput.addEventListener('input', function () {
         const hasText = this.value.trim().length > 0;
         clearSearchBtn.style.display = hasText ? 'block' : 'none';
         filterMyCampaigns();
       });
       categoryFilter.addEventListener('change', filterMyCampaigns);
-      clearSearchBtn.addEventListener('click', function() {
+      clearSearchBtn.addEventListener('click', function () {
         searchInput.value = '';
         categoryFilter.value = '';
         this.style.display = 'none';
@@ -185,11 +193,11 @@
       const container = document.getElementById('myCampaignsList');
 
       let filtered = myCampaignsData.filter(c => {
-        const t = (c.title||'').toLowerCase();
-        const cat = (c.category||'').toLowerCase();
-        const loc = (c.location||'').toLowerCase();
-        const desc = (c.description||'').toLowerCase();
-        const org = (c.organizer?.name||'').toLowerCase();
+        const t = (c.title || '').toLowerCase();
+        const cat = (c.category || '').toLowerCase();
+        const loc = (c.location || '').toLowerCase();
+        const desc = (c.description || '').toLowerCase();
+        const org = (c.organizer?.name || '').toLowerCase();
         const matchSearch = !searchTerm || t.includes(searchTerm) || cat.includes(searchTerm) || loc.includes(searchTerm) || desc.includes(searchTerm) || org.includes(searchTerm);
         const matchCategory = !selectedCategory || c.category === selectedCategory;
         return matchSearch && matchCategory;
@@ -209,10 +217,10 @@
         // Calculate progress (for now, using random progress, later can be real data)
         const progress = Math.floor(Math.random() * 80) + 10; // Random progress between 10-90%
         const raised = Math.floor((campaign.goal * progress) / 100);
-        
+
         // Get campaign image (use uploaded image if available, otherwise default)
         const campaignImage = campaign.uploadedImage || `photos/projectimg${Math.floor(Math.random() * 3) + 1}.png`;
-        
+
         return `
           <div class="campaign-card" data-campaign-id="${campaign.id}">
             <img src="${campaignImage}" alt="${campaign.title}" class="campaign-img">
@@ -247,7 +255,7 @@
 
       const modal = document.getElementById('campaign-modal');
       const content = document.getElementById('campaign-details');
-      
+
       content.innerHTML = `
         <div class="campaign-detail">
           <h2>${campaign.title}</h2>
@@ -275,14 +283,14 @@
           </div>
         </div>
       `;
-      
+
       modal.style.display = 'block';
     }
 
     // Delete campaign
     async function deleteCampaign(campaignId) {
       if (!confirm('Are you sure you want to delete this campaign?')) return;
-      
+
       const result = await campaignService.deleteCampaign(campaignId);
       if (result.success) {
         alert('Campaign deleted successfully');
@@ -311,11 +319,11 @@
     }
 
     // Close modals
-    document.getElementById('close-campaign-modal').onclick = function() {
+    document.getElementById('close-campaign-modal').onclick = function () {
       document.getElementById('campaign-modal').style.display = 'none';
     };
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
       const campaignModal = document.getElementById('campaign-modal');
       if (event.target === campaignModal) {
         campaignModal.style.display = 'none';
@@ -323,4 +331,5 @@
     };
   </script>
 </body>
+
 </html>
