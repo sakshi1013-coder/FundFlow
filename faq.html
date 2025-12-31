@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frequently Asked Questions - FundFlow</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="monetization.css" />
+  <script src="frontend.js" defer></script>
+  <script src="backend.js" defer></script>
+  <script src="donation.js" defer></script>
+  <script src="premium.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+  <!-- Firebase UI (for auth modal styling consistency) -->
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />
+</head>
+<body>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html" class="logo-link">
+      <img src="photos/logo.png" alt="FundFlow" class="brand-logo" />
+    </a>
+    <div class="nav-center">
+      <a href="index.html">Home</a>
+      <a class="search"><img src="photos/search.png" alt="Search Icon"> search</a>
+      <a>donate</a>
+      <a class="about" href="about.html">about <img src="photos/triangle-arrow.png" alt="About Arrow"></a>
+      <a id="auth-link">
+        <span id="nav-username">Signup / Login</span>
+        <img id="logout-icon" src="photos/logouticon.png" alt="Logout">
+      </a>
+    </div>
+  </nav>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="auth-modal">
+    <div class="auth-modal-content">
+      <button id="close-auth-modal" class="auth-close-btn">&times;</button>
+      <div id="user-info"></div>
+      <button id="logout-btn" style="display:none;">Logout</button>
+      <div id="auth-container"></div>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <header class="faq-hero">
+    <div class="faq-container">
+      <h1>Frequently Asked Questions</h1>
+      <p>Find answers to common questions about using FundFlow, creating campaigns, and making donations.</p>
+      <div class="search-faq">
+        <input type="text" id="faq-search" placeholder="Search FAQs..." />
+        <button onclick="searchFAQs()" class="search-btn">🔍</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="faq-main">
+    <div class="faq-container">
+      
+      <!-- Quick Links -->
+      <section class="faq-quick-links">
+        <h2>Quick Links</h2>
+        <div class="quick-links-grid">
+          <a href="#getting-started" class="quick-link">
+            <span class="link-icon">🚀</span>
+            <span>Getting Started</span>
+          </a>
+          <a href="#donations" class="quick-link">
+            <span class="link-icon">💰</span>
+            <span>Donations</span>
+          </a>
+          <a href="#campaigns" class="quick-link">
+            <span class="link-icon">📝</span>
+            <span>Campaigns</span>
+          </a>
+          <a href="#security" class="quick-link">
+            <span class="link-icon">🔒</span>
+            <span>Security</span>
+          </a>
+          <a href="#fees" class="quick-link">
+            <span class="link-icon">💸</span>
+            <span>Fees & Payments</span>
+          </a>
+          <a href="#account" class="quick-link">
+            <span class="link-icon">👤</span>
+            <span>Account</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Getting Started -->
+      <section id="getting-started" class="faq-section">
+        <h2>🚀 Getting Started</h2>
+        <div class="faq-items">
+          
+          <details class="faq-item">
+            <summary><strong>How do I start a campaign on FundFlow?</strong></summary>
+            <div class="faq-answer">
+              <p>Starting a campaign is easy:</p>
+              <ol>
+                <li>Sign up for a free account or log in</li>
+                <li>Click "Start a Campaign" from the homepage</li>
+                <li>Fill out the campaign form with your story, goal, and photos</li>
+                <li>Preview your campaign and publish it</li>
+                <li>Share it with friends, family, and on social media</li>
+              </ol>
+              <p>The entire process takes just 5-10 minutes!</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Do I need an account to use FundFlow?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>To donate:</strong> No account required! You can donate to any campaign without signing up.</p>
+              <p><strong>To create campaigns:</strong> Yes, you need a free account to start and manage campaigns.</p>
+              <p><strong>Benefits of having an account:</strong></p>
+              <ul>
+                <li>Track your donation history</li>
+                <li>Get updates on campaigns you've supported</li>
+                <li>Manage multiple campaigns</li>
+                <li>Access advanced features</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>What types of campaigns can I create?</strong></summary>
+            <div class="faq-answer">
+              <p>FundFlow supports various types of campaigns including:</p>
+              <ul>
+                <li><strong>Medical:</strong> Medical emergencies, treatments, surgeries</li>
+                <li><strong>Education:</strong> School fees, educational materials, scholarships</li>
+                <li><strong>Community:</strong> Local projects, infrastructure, social causes</li>
+                <li><strong>Animals:</strong> Animal rescue, veterinary care, shelters</li>
+                <li><strong>Disaster Relief:</strong> Emergency aid, natural disaster support</li>
+                <li><strong>Personal:</strong> Family emergencies, life events, dreams</li>
+                <li><strong>Other:</strong> Creative projects, sports, travel, and more</li>
+              </ul>
+              <p>We review all campaigns to ensure they meet our community guidelines.</p>
+            </div>
+          </details>
+
+        </div>
+      </section>
+
+      <!-- Donations -->
+      <section id="donations" class="faq-section">
+        <h2>💰 Donations</h2>
+        <div class="faq-items">
+          
+          <details class="faq-item">
+            <summary><strong>Is my donation secure?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>Absolutely!</strong> We take security very seriously:</p>
+              <ul>
+                <li>All payments are encrypted using industry-standard SSL technology</li>
+                <li>We partner with trusted payment processors like Razorpay and Stripe</li>
+                <li>Your financial information is never stored on our servers</li>
+                <li>All transactions are monitored for fraud</li>
+                <li>You receive instant confirmation of your donation</li>
+              </ul>
+              <p>Your generosity is protected by the same security standards used by major banks.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>What payment methods do you accept?</strong></summary>
+            <div class="faq-answer">
+              <p>We accept various payment methods for your convenience:</p>
+              <ul>
+                <li><strong>Credit Cards:</strong> Visa, Mastercard, American Express</li>
+                <li><strong>Debit Cards:</strong> All major Indian debit cards</li>
+                <li><strong>Net Banking:</strong> 50+ banks supported</li>
+                <li><strong>UPI:</strong> Google Pay, PhonePe, Paytm, and all UPI apps</li>
+                <li><strong>Digital Wallets:</strong> Paytm, Amazon Pay, MobiKwik</li>
+              </ul>
+              <p>Choose the method that works best for you!</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Can I donate anonymously?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>Yes!</strong> We respect your privacy preferences:</p>
+              <ul>
+                <li>Check the "Donate anonymously" box when making a donation</li>
+                <li>Your name won't appear on the campaign page</li>
+                <li>The campaign organizer won't see your personal details</li>
+                <li>You'll still receive a donation receipt for your records</li>
+              </ul>
+              <p>You can choose to be anonymous on a per-donation basis.</p>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Can I get a refund for my donation?</strong></summary>
+            <div class="faq-answer">
+              <p>Refunds are handled case-by-case:</p>
+              <p><strong>Eligible for refunds:</strong></p>
+              <ul>
+                <li>Campaign found to be fraudulent</li>
+                <li>Duplicate or accidental donations</li>
+                <li>Technical errors during payment</li>
+              </ul>
+              <p><strong>Not eligible for refunds:</strong></p>
+              <ul>
+                <li>Change of mind after successful donation</li>
+                <li>Campaign doesn't reach its goal</li>
+                <li>Personal disagreements with campaign organizer</li>
+              </ul>
+              <p>Contact our support team within 48 hours if you need assistance.</p>
+            </div>
+          </details>
+
+        </div>
+      </section>
+
+      <!-- Campaigns -->
+      <section id="campaigns" class="faq-section">
+        <h2>📝 Campaigns</h2>
+        <div class="faq-items">
+          
+          <details class="faq-item">
+            <summary><strong>How quickly can I withdraw funds?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>Most withdrawals are processed within 24 hours!</strong></p>
+              <p><strong>Withdrawal process:</strong></p>
+              <ol>
+                <li>Submit withdrawal request from your dashboard</li>
+                <li>Our team reviews the request (usually within 2-4 hours)</li>
+                <li>Funds are transferred to your bank account</li>
+                <li>You receive confirmation via email and SMS</li>
+              </ol>
+              <p><strong>Requirements for withdrawal:</strong></p>
+              <ul>
+                <li>Minimum withdrawal amount: ₹500</li>
+                <li>Valid bank account details</li>
+                <li>Campaign verification (if required)</li>
+                <li>Proper documentation for large amounts</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Can I start a fundraiser for someone else?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>Yes, absolutely!</strong> Many successful campaigns are started by caring friends and family members.</p>
+              <p><strong>When creating the campaign:</strong></p>
+              <ul>
+                <li>Clearly mention your relationship to the beneficiary</li>
+                <li>Get permission from the person you're helping</li>
+                <li>Include the beneficiary's story and photos (with consent)</li>
+                <li>Be transparent about how funds will be used</li>
+              </ul>
+              <p><strong>For fund transfers:</strong></p>
+              <ul>
+                <li>You can transfer funds directly to the beneficiary's account</li>
+                <li>Or manage payments for medical bills, education fees, etc.</li>
+                <li>Keep receipts and update donors on fund usage</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>What happens if my campaign doesn't reach its goal?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>Don't worry!</strong> FundFlow uses a flexible funding model:</p>
+              <ul>
+                <li>You keep whatever amount you raise, even if it's less than your goal</li>
+                <li>There's no "all-or-nothing" requirement</li>
+                <li>You can withdraw funds at any time during your campaign</li>
+                <li>You can extend your campaign duration if needed</li>
+                <li>Consider lowering your goal if it helps encourage more donations</li>
+              </ul>
+              <p><strong>Tips to boost your campaign:</strong></p>
+              <ul>
+                <li>Share regular updates with photos and progress</li>
+                <li>Post on social media and WhatsApp groups</li>
+                <li>Reach out to local newspapers or blogs</li>
+                <li>Consider getting verified for extra trust</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>How do I promote my campaign?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>Promotion is key to campaign success!</strong> Here are proven strategies:</p>
+              <p><strong>Social Media:</strong></p>
+              <ul>
+                <li>Share on Facebook, Instagram, Twitter, LinkedIn</li>
+                <li>Use relevant hashtags and tag friends</li>
+                <li>Create engaging posts with photos and videos</li>
+                <li>Join community groups related to your cause</li>
+              </ul>
+              <p><strong>Direct Outreach:</strong></p>
+              <ul>
+                <li>WhatsApp messages to family and friends</li>
+                <li>Email your contact list</li>
+                <li>Ask supporters to share with their networks</li>
+                <li>Contact local media for human interest stories</li>
+              </ul>
+              <p><strong>Keep Momentum:</strong></p>
+              <ul>
+                <li>Post regular updates with photos</li>
+                <li>Thank donors publicly (if they consent)</li>
+                <li>Share milestones and progress</li>
+                <li>Be authentic and personal in your communications</li>
+              </ul>
+            </div>
+          </details>
+
+        </div>
+      </section>
+
+      <!-- Security -->
+      <section id="security" class="faq-section">
+        <h2>🔒 Security & Trust</h2>
+        <div class="faq-items">
+          
+          <details class="faq-item">
+            <summary><strong>How do you verify campaigns?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>We have multiple layers of campaign verification:</strong></p>
+              <p><strong>Automatic Review:</strong></p>
+              <ul>
+                <li>All campaigns are reviewed before going live</li>
+                <li>We check for policy violations and suspicious content</li>
+                <li>Campaigns must include clear goals and genuine stories</li>
+              </ul>
+              <p><strong>Manual Verification (Premium):</strong></p>
+              <ul>
+                <li>Identity verification for campaign organizers</li>
+                <li>Document verification for medical/education campaigns</li>
+                <li>Phone number and address confirmation</li>
+                <li>Social media profile verification</li>
+              </ul>
+              <p><strong>Ongoing Monitoring:</strong></p>
+              <ul>
+                <li>Community reporting system</li>
+                <li>Regular campaign progress reviews</li>
+                <li>Fund usage tracking for large campaigns</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>What if I suspect a campaign is fake?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>We take fraud very seriously.</strong> If you suspect a campaign is fraudulent:</p>
+              <p><strong>How to report:</strong></p>
+              <ul>
+                <li>Click the "Report" button on the campaign page</li>
+                <li>Email us at support@fundflow.com with details</li>
+                <li>Include any evidence or concerns you have</li>
+              </ul>
+              <p><strong>What we do:</strong></p>
+              <ul>
+                <li>Investigate all reports within 24 hours</li>
+                <li>Temporarily suspend suspicious campaigns</li>
+                <li>Refund donors if fraud is confirmed</li>
+                <li>Work with authorities when necessary</li>
+              </ul>
+              <p><strong>Red flags to watch for:</strong></p>
+              <ul>
+                <li>Vague or inconsistent stories</li>
+                <li>Stolen or stock photos</li>
+                <li>Unrealistic funding goals</li>
+                <li>Pressure to donate immediately</li>
+                <li>No contact information or social media presence</li>
+              </ul>
+            </div>
+          </details>
+
+        </div>
+      </section>
+
+      <!-- Fees & Payments -->
+      <section id="fees" class="faq-section">
+        <h2>💸 Fees & Payments</h2>
+        <div class="faq-items">
+          
+          <details class="faq-item">
+            <summary><strong>Are there any platform fees?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>No platform fees!</strong> FundFlow charges 0% platform fee.</p>
+              <p><strong>What this means:</strong></p>
+              <ul>
+                <li>100% of donations go to your campaign</li>
+                <li>No hidden charges or deductions</li>
+                <li>No monthly or annual fees</li>
+                <li>Free to create and manage campaigns</li>
+              </ul>
+              <p><strong>Only payment processing fees apply:</strong></p>
+              <ul>
+                <li>Credit/Debit Cards: ~2-3% (charged by banks)</li>
+                <li>UPI: ₹0 (completely free)</li>
+                <li>Net Banking: ₹10-20 per transaction</li>
+              </ul>
+              <p><strong>Optional services (paid):</strong></p>
+              <ul>
+                <li>Premium verification badges (₹499-₹1999)</li>
+                <li>Advanced analytics and promotion tools</li>
+                <li>Priority customer support</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>Why should I get verified?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>Verified campaigns perform significantly better!</strong></p>
+              <p><strong>Benefits of verification:</strong></p>
+              <ul>
+                <li><strong>3x more donations</strong> on average</li>
+                <li>Verified badge builds trust with donors</li>
+                <li>Priority placement in search results</li>
+                <li>Access to advanced campaign analytics</li>
+                <li>Dedicated support from our team</li>
+                <li>Higher daily withdrawal limits</li>
+              </ul>
+              <p><strong>Verification tiers:</strong></p>
+              <ul>
+                <li><strong>Basic (₹499):</strong> Identity + phone verification</li>
+                <li><strong>Premium (₹999):</strong> Documents + social media verification</li>
+                <li><strong>Organization (₹1999):</strong> Full org verification + legal docs</li>
+              </ul>
+              <p>Most campaigners recover the verification cost within the first week due to increased donations!</p>
+            </div>
+          </details>
+
+        </div>
+      </section>
+
+      <!-- Account -->
+      <section id="account" class="faq-section">
+        <h2>👤 Account & Settings</h2>
+        <div class="faq-items">
+          
+          <details class="faq-item">
+            <summary><strong>How do I change my account details?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>You can update your account anytime:</strong></p>
+              <ol>
+                <li>Log in to your FundFlow account</li>
+                <li>Go to "Account Settings" in your dashboard</li>
+                <li>Update your name, email, phone, or address</li>
+                <li>Save changes and verify new email/phone if changed</li>
+              </ol>
+              <p><strong>Important notes:</strong></p>
+              <ul>
+                <li>Email changes require verification</li>
+                <li>Some changes may affect ongoing campaigns</li>
+                <li>Bank account changes require additional verification</li>
+                <li>Contact support for help with major changes</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="faq-item">
+            <summary><strong>How do I delete my account?</strong></summary>
+            <div class="faq-answer">
+              <p><strong>We're sad to see you go!</strong> Before deleting:</p>
+              <p><strong>Important considerations:</strong></p>
+              <ul>
+                <li>Complete all active campaigns or transfer ownership</li>
+                <li>Withdraw any remaining funds</li>
+                <li>Download your donation history and receipts</li>
+                <li>Cancel any recurring donations you've set up</li>
+              </ul>
+              <p><strong>To delete your account:</strong></p>
+              <ol>
+                <li>Email support@fundflow.com with your request</li>
+                <li>Confirm your identity and reason for deletion</li>
+                <li>We'll process your request within 7 days</li>
+                <li>All personal data will be permanently removed</li>
+              </ol>
+            </div>
+          </details>
+
+        </div>
+      </section>
+
+      <!-- Still have questions? -->
+      <section class="faq-contact">
+        <div class="contact-card">
+          <h2>Still have questions?</h2>
+          <p>Our support team is here to help you succeed. Reach out to us anytime!</p>
+          <div class="contact-options">
+            <a href="mailto:support@fundflow.com" class="contact-btn">
+              <span class="contact-icon">📧</span>
+              Email Support
+            </a>
+            <a href="tel:+91-800-123-4567" class="contact-btn">
+              <span class="contact-icon">📞</span>
+              Call Us
+            </a>
+            <a href="#" class="contact-btn">
+              <span class="contact-icon">💬</span>
+              Live Chat
+            </a>
+          </div>
+          <p class="contact-hours">
+            <strong>Support Hours:</strong> Monday - Friday, 9 AM - 6 PM IST<br>
+            <strong>Average Response Time:</strong> Within 2 hours
+          </p>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+<footer>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQs</a>
+    <a href="#">Contact</a>
+    <a href="#">Terms</a>
+    <a href="#">Privacy</a>
+  </div>
+  <div class="footer-social">
+    <a href="#"><img src="photos/facebook.png" alt="Facebook"></a>
+    <a href="#"><img src="photos/twitter.png" alt="Twitter"></a>
+    <a href="#"><img src="photos/instagram.png" alt="Instagram"></a>
+    <!-- Add more as needed -->
+  </div>
+  <div class="footer-tagline">
+    Together, we fund hope.
+  </div>
+  <div class="footer-credits">
+    &copy; 2025 FundFlow. All rights reserved.
+  </div>
+</footer>
+
+  <script>
+    // FAQ search functionality
+    function searchFAQs() {
+      const searchTerm = document.getElementById('faq-search').value.toLowerCase();
+      const faqItems = document.querySelectorAll('.faq-item');
+      let hasResults = false;
+
+      faqItems.forEach(item => {
+        const summary = item.querySelector('summary').textContent.toLowerCase();
+        const answer = item.querySelector('.faq-answer').textContent.toLowerCase();
+        
+        if (summary.includes(searchTerm) || answer.includes(searchTerm)) {
+          item.style.display = 'block';
+          hasResults = true;
+          // Highlight search terms
+          if (searchTerm) {
+            item.classList.add('highlighted');
+          }
+        } else {
+          item.style.display = searchTerm ? 'none' : 'block';
+          item.classList.remove('highlighted');
+        }
+      });
+
+      // Show/hide sections based on results
+      document.querySelectorAll('.faq-section').forEach(section => {
+        const visibleItems = section.querySelectorAll('.faq-item[style="display: block"], .faq-item:not([style])');
+        if (searchTerm && visibleItems.length === 0) {
+          section.style.display = 'none';
+        } else {
+          section.style.display = 'block';
+        }
+      });
+
+      // Show no results message
+      let noResultsMsg = document.getElementById('no-results');
+      if (searchTerm && !hasResults) {
+        if (!noResultsMsg) {
+          noResultsMsg = document.createElement('div');
+          noResultsMsg.id = 'no-results';
+          noResultsMsg.className = 'no-results';
+          noResultsMsg.innerHTML = '<p>No FAQs found matching your search. Try different keywords or <a href="mailto:support@fundflow.com">contact our support team</a>.</p>';
+          document.querySelector('.faq-main .faq-container').appendChild(noResultsMsg);
+        }
+        noResultsMsg.style.display = 'block';
+      } else if (noResultsMsg) {
+        noResultsMsg.style.display = 'none';
+      }
+    }
+
+    // Search on Enter key
+    document.getElementById('faq-search').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        searchFAQs();
+      }
+    });
+
+    // Search on input
+    document.getElementById('faq-search').addEventListener('input', function() {
+      if (this.value === '') {
+        searchFAQs(); // Reset to show all
+      }
+    });
+
+    // Smooth scrolling for quick links
+    document.querySelectorAll('.quick-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+  </script>
+
+  <style>
+    /* FAQ Page Specific Styles */
+    .faq-hero {
+      background: linear-gradient(135deg, #01387A 0%, #0056b3 100%);
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .faq-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .faq-hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .faq-hero p {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+
+    .search-faq {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+    }
+
+    .search-faq input {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .search-btn {
+      padding: 12px 20px;
+      background: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-btn:hover {
+      background: #f8f9fa;
+      transform: translateY(-1px);
+    }
+
+    .faq-main {
+      padding: 40px 0;
+      background: #FAFAF9;
+    }
+
+    .faq-quick-links {
+      margin-bottom: 40px;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .faq-quick-links h2 {
+      margin-bottom: 20px;
+      color: #2c3e50;
+      text-align: center;
+    }
+
+    .quick-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 20px;
+      background: #f8f9fa;
+      border: 2px solid transparent;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #2c3e50;
+      transition: all 0.3s ease;
+    }
+
+    .quick-link:hover {
+      background: #01387A;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(1, 56, 122, 0.2);
+    }
+
+    .link-icon {
+      font-size: 1.2rem;
+    }
+
+    .faq-section {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .faq-section h2 {
+      color: #2c3e50;
+      margin-bottom: 30px;
+      font-size: 1.8rem;
+      border-bottom: 3px solid #01387A;
+      padding-bottom: 10px;
+    }
+
+    .faq-items {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .faq-item {
+      border: 2px solid #e1e8ed;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item:hover {
+      border-color: #01387A;
+      box-shadow: 0 4px 15px rgba(1, 56, 122, 0.1);
+    }
+
+    .faq-item.highlighted {
+      border-color: #f39c12;
+      background: #fff8e1;
+    }
+
+    .faq-item summary {
+      padding: 20px;
+      background: #f8f9fa;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: all 0.3s ease;
+      list-style: none;
+    }
+
+    .faq-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .faq-item summary::after {
+      content: '+';
+      float: right;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #01387A;
+      transition: transform 0.3s ease;
+    }
+
+    .faq-item[open] summary::after {
+      transform: rotate(45deg);
+    }
+
+    .faq-item[open] summary {
+      background: #01387A;
+      color: white;
+    }
+
+    .faq-item[open] summary::after {
+      color: white;
+    }
+
+    .faq-answer {
+      padding: 25px;
+      line-height: 1.6;
+      color: #2c3e50;
+    }
+
+    .faq-answer ul, .faq-answer ol {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    .faq-answer li {
+      margin: 8px 0;
+    }
+
+    .faq-answer strong {
+      color: #01387A;
+    }
+
+    .faq-contact {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .contact-card h2 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    .contact-card p {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .contact-options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 25px;
+      background: #01387A;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .contact-btn:hover {
+      background: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(1, 56, 122, 0.3);
+      color: white;
+    }
+
+    .contact-icon {
+      font-size: 1.2rem;
+    }
+
+    .contact-hours {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      margin-top: 20px;
+      color: #666;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .faq-hero {
+        padding: 40px 0;
+      }
+
+      .faq-hero h1 {
+        font-size: 2rem;
+      }
+
+      .search-faq {
+        flex-direction: column;
+      }
+
+      .faq-section {
+        padding: 25px;
+      }
+
+      .quick-links-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-options {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .faq-item summary {
+        padding: 15px;
+        font-size: 1rem;
+      }
+
+      .faq-answer {
+        padding: 20px;
+      }
+    }
+  </style>
+</body>
+</html>

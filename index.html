@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homepage</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="monetization.css">
+  <script src="frontend.js" defer></script>
+   <script src="backend.js" defer></script>
+  <script src="searchUtils.js" defer></script>
+  <script src="donation.js" defer></script>
+  <script src="premium.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.js"></script>
+<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/6.1.0/firebase-ui-auth.css" />
+</head>
+
+<body>
+
+<nav>
+  <a href="admin-dashboard.html" class="logo-link">
+    <img src="photos/circularlogo.png" alt="Circular Logo" class="circular-logo">
+  </a>
+  <div class="nav-center">
+    <a class="search" href="#homeCampaignSearch"><img src="photos/search.png" alt="Search Icon"> search</a>
+    <a class="dt-op" href="#homeCampaignSearch" >donate</a>
+    <a class="start-camp" href="start-a-camp.html" target="_blank">Start a Campaign</a>
+    <a class="about" href="about.html">about <img src="photos/triangle-arrow.png" alt="About Arrow"></a>
+    <a id="auth-link">
+      <span id="nav-username">Signup / Login</span>
+      <img id="logout-icon" src="photos/logouticon.png" alt="Logout">
+    </a>
+  </div>
+</nav>
+
+<!-- Place this modal just after your nav, before main content -->
+<div id="auth-modal" class="auth-modal">
+  <div class="auth-modal-content">
+    <button id="close-auth-modal" class="auth-close-btn">&times;</button>
+    <div id="user-info"></div>
+    <button id="logout-btn" style="display:none;">Logout</button>
+    <div id="auth-container"></div>
+  </div>
+</div>
+
+
+    <div class="logo">
+        <img src="photos/logo.png" alt="Logo">
+      </div>
+     <p class="quote1"> "A future where no genuine need goes unheard and no helping hand goes unnoticed.”</p>
+    <div class="just-img">
+      <img src="photos/projectimg1.png">
+      <img src="photos/projectimg2.png">
+      <img src="photos/projectimg3.png" class="third-img">
+    </div>
+
+    <div class="line">
+      <span >🚀 Start fundraising in minutes — it's 100% free! 
+        <img src="photos/freeicon.png" >
+      </span>
+      <span class="divider">|</span>
+      <span >💰 0% platform fee — every rupee goes to your cause!</span>
+    </div>
+
+    <!--how it works-->
+<section class="how-it-works">
+  <div class="howit-header">
+    <h2>Three steps.<br><span>One powerful shift.</span></h2>
+    <p class="howit-desc">
+      Start your journey in minutes. Each step builds on the last, helping you raise funds, inspire support, and create real impact.
+    </p>
+  </div>
+  <div class="steps-vertical">
+    <div class="step-card">
+      <div class="step-number">1</div>
+      <div class="step-content">
+        <div class="step-title">Sign up and start your campaign</div>
+        <div class="step-desc">
+          Create your free account in minutes. Tell us what you’re raising money for — whether it’s education, medical help, community projects, or a personal dream. Add a title, goal, and a story that touches hearts.
+        </div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-number">2</div>
+      <div class="step-content">
+        <div class="step-title">Share your story with the world</div>
+        <div class="step-desc">
+          Once your campaign is live, share it with friends, family, and social media. Every share brings you closer to your goal. Inspire people with photos, videos, and updates that show why your cause matters.
+        </div>
+      </div>
+    </div>
+    <div class="step-card">
+      <div class="step-number">3</div>
+      <div class="step-content">
+        <div class="step-title">Collect funds and create impact</div>
+        <div class="step-desc">
+          Watch as donations come in securely through our trusted payment partners. Withdraw funds anytime and start making a real difference. Your supporters will stay updated as you achieve milestones and change lives.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--featured campaign-->
+<!--featured campaign - IMPROVED VERSION-->
+<section class="featured-campaigns">
+  <h2>Featured Campaigns</h2>
+  <div class="campaign-filters">
+    <input id="homeCampaignSearch" type="text" placeholder="Search by title, category or location..." class="campaign-search">
+    <select class="campaign-category">
+      <option value="">All Categories</option>
+      <option value="education">Education</option>
+      <option value="medical">Medical</option>
+      <option value="community">Community</option>
+      <option value="personal">Personal</option>
+    </select>
+  </div>
+  <div class="campaigns-grid">
+    
+    <!-- Campaign Card 1 -->
+    <div class="campaign-card" data-location="Ranchi, Jharkhand" data-organizer-id="user1" data-user-email="organizer1@example.com">
+      <img src="https://i.pinimg.com/736x/4a/0c/16/4a0c16e7408dcb1aa478877903818737.jpg" alt="Campaign 1" class="campaign-img">
+      <div class="campaign-content-area">
+        <span class="campaign-category-badge">Education</span>
+        <h3>Help Build a School</h3>
+        <p>Support our mission to provide quality education in rural areas.</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 60%"></div>
+        </div>
+        <div class="progress-info">
+          <span class="raised">₹60,000 raised</span>
+          <span>of ₹1,00,000</span>
+        </div>
+        <button class="donate-btn" onclick="openDonationModal('campaign-1', 'Help Build a School', 'Support our mission to provide quality education in rural areas.')">Donate Now</button>
+      </div>
+    </div>
+
+    <!-- Campaign Card 2 -->
+    <div class="campaign-card" data-location="Mumbai, Maharashtra" data-organizer-id="user2" data-user-email="priya@example.com">
+      <img src="https://i.pinimg.com/736x/b0/04/87/b00487edb24739309b9935358775cb82.jpg" alt="Campaign 2" class="campaign-img">
+      <div class="campaign-content-area">
+        <span class="campaign-category-badge">Medical</span>
+        <h3>Medical Aid for Priya</h3>
+        <p>Help Priya get life-saving surgery and a new chance at life.</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 80%"></div>
+        </div>
+        <div class="progress-info">
+          <span class="raised">₹4,00,000 raised</span>
+          <span>of ₹5,00,000</span>
+        </div>
+        <button class="donate-btn" onclick="openDonationModal('campaign-2', 'Medical Aid for Priya', 'Help Priya get life-saving surgery and a new chance at life.')">Donate Now</button>
+      </div>
+    </div>
+
+    <!-- Campaign Card 3 -->
+    <div class="campaign-card" data-location="Bikaner, Rajasthan" data-organizer-id="user3" data-user-email="waterproject@example.com">
+      <img src="https://i.pinimg.com/1200x/11/ee/36/11ee36e5bb13dec6adabc6c4ccd96ebd.jpg" alt="Campaign 3" class="campaign-img">
+      <div class="campaign-content-area">
+        <span class="campaign-category-badge">Community</span>
+        <h3>Clean Water for All</h3>
+        <p>Join us in bringing clean water to 5,000+ families in need.</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 45%"></div>
+        </div>
+        <div class="progress-info">
+          <span class="raised">₹90,000 raised</span>
+          <span>of ₹2,00,000</span>
+        </div>
+        <button class="donate-btn" onclick="openDonationModal('campaign-3', 'Clean Water for All', 'Join us in bringing clean water to 5,000+ families in need.')">Donate Now</button>
+      </div>
+    </div>
+
+    <!-- Campaign Card 4 -->
+    <div class="campaign-card" data-location="Pune, Maharashtra">
+      <img src="https://i.pinimg.com/1200x/61/dd/2a/61dd2ab424f05a424136b715ba22dabc.jpg" alt="Campaign 4" class="campaign-img">
+      <div class="campaign-content-area">
+        <span class="campaign-category-badge">Community</span>
+        <h3>Support Animal Shelter</h3>
+        <p>Help us provide food and medical care for rescued animals.</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 35%"></div>
+        </div>
+        <div class="progress-info">
+          <span class="raised">₹35,000 raised</span>
+          <span>of ₹1,00,000</span>
+        </div>
+        <button class="donate-btn" onclick="openDonationModal('campaign-4', 'Support Animal Shelter', 'Help us provide food and medical care for rescued animals.')">Donate Now</button>
+      </div>
+    </div>
+
+    <!-- Campaign Card 5 -->
+    <div class="campaign-card" data-location="Nagpur, Maharashtra">
+      <img src="https://i.pinimg.com/736x/83/6c/df/836cdf04bbb103764b8b56cc97b7fa95.jpg" alt="Campaign 5" class="campaign-img">
+      <div class="campaign-content-area">
+        <span class="campaign-category-badge">Personal</span>
+        <h3>Women Empowerment Drive</h3>
+        <p>Empowering women with skills and resources for a better future.</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 72%"></div>
+        </div>
+        <div class="progress-info">
+          <span class="raised">₹72,000 raised</span>
+          <span>of ₹1,00,000</span>
+        </div>
+        <button class="donate-btn" onclick="openDonationModal('campaign-5', 'Women Empowerment Drive', 'Empowering women with skills and resources for a better future.')">Donate Now</button>
+      </div>
+    </div>
+
+    <!-- Campaign Card 6 -->
+    <div class="campaign-card" data-location="Guwahati, Assam">
+      <img src="https://i.pinimg.com/736x/a0/a9/f0/a0a9f090440ab699553c7cac52731ad4.jpg" alt="Campaign 6" class="campaign-img">
+      <div class="campaign-content-area">
+        <span class="campaign-category-badge">Community</span>
+        <h3>Disaster Relief Fund</h3>
+        <p>Help families rebuild after the recent floods and storms.</p>
+        <div class="progress-bar">
+          <div class="progress" style="width: 55%"></div>
+        </div>
+        <div class="progress-info">
+          <span class="raised">₹1,10,000 raised</span>
+          <span>of ₹2,00,000</span>
+        </div>
+        <button class="donate-btn" onclick="openDonationModal('campaign-6', 'Disaster Relief Fund', 'Help families rebuild after the recent floods and storms.')">Donate Now</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!--why choose us section-->
+
+<section class="why-choose-us">
+  <h2>Why Choose Us?</h2>
+  <div class="trust-carousel">
+
+    <div class="trust-card active">
+      <button class="carousel-arrow left">&#8592;</button>
+      <img src="photos/nomoney.png" alt="0% Platform Fee" class="trust-icon">
+      <h3>0% Platform Fee</h3>
+      <p>Every rupee you raise goes directly to your cause. No hidden charges, no cuts — because generosity should stay pure. More impact, less loss.</p>
+      <button class="carousel-arrow right">&#8594;</button>
+    </div>
+
+    <div class="trust-card">
+      <button class="carousel-arrow left">&#8592;</button>
+      <img src="photos/verifyicon.png" alt="Verified Campaigns" class="trust-icon">
+      <h3>Verified Campaigns</h3>
+      <p>All campaigns are carefully reviewed for authenticity and transparency. Donors see a verified badge so they can give with confidence.</p>
+      <button class="carousel-arrow right">&#8594;</button>
+    </div>
+
+    <div class="trust-card">
+      <button class="carousel-arrow left">&#8592;</button>
+      <img src="photos/fastpayouticon.png" alt="Fast Payouts" class="trust-icon">
+      <h3>Fast Payouts</h3>
+      <p>Access your funds quickly whenever you need them. We ensure secure, seamless withdrawals so help never comes too late.</p>
+      <button class="carousel-arrow right">&#8594;</button>
+    </div>
+
+    <div class="trust-card">
+      <button class="carousel-arrow left">&#8592;</button>
+      <img src="photos/com-transparent.png" alt="Community Transparency" class="trust-icon">
+      <h3>Community Transparency</h3>
+      <p>Track every rupee raised and spent with real-time updates. Our platform is built on trust, openness, and shared accountability.</p>
+      <button class="carousel-arrow right">&#8594;</button>
+    </div>
+
+    <div class="trust-card">
+      <button class="carousel-arrow left">&#8592;</button>
+      <img src="photos/securepayments.png" alt="Secure Payments" class="trust-icon">
+      <h3>Secure Payments</h3>
+      <p>All donations are processed through trusted, encrypted partners. Your transactions are safe, private, and 100% protected.</p>
+      <button class="carousel-arrow right">&#8594;</button>
+    </div>
+
+    <div class="trust-card">
+      <button class="carousel-arrow left">&#8592;</button>
+      <img src="photos/trustshake.png" alt="Trusted by Users" class="trust-icon">
+      <h3>Trusted by Users</h3>
+      <p>Thousands of people put their faith in us every day. From small acts of kindness to life-changing campaigns, we’ve become a platform people believe in.</p>
+      <button class="carousel-arrow right">&#8594;</button>
+    </div>
+
+  </div>
+</section>
+
+ 
+<!--impact stories-->
+<section class="impact-stories">
+  <h2>Impact Stories</h2>
+  <div class="stories-grid">
+    <div class="story-card">
+      <img src="https://i.pinimg.com/1200x/0b/27/71/0b2771709719b463dda081bf9346affa.jpg" alt="Priya's Education" class="story-img">
+      <blockquote>
+        “Priya’s education fund reached its goal in just 2 weeks thanks to 200 generous donors! Now she’s back in school and dreaming big.”
+      </blockquote>
+      <div class="story-author">
+        <img src="photos/profileicon.png" alt="Priya" class="author-avatar">
+        <span>Priya, Student</span>
+      </div>
+    </div>
+    <div class="story-card">
+      <img src="https://i.pinimg.com/736x/a7/83/01/a78301a5cbef76d9b63d5408a3b53df3.jpg" alt="Clean Water Project" class="story-img">
+      <blockquote>
+        “With your help, we brought clean water to our entire village. Our children are healthier and happier!”
+      </blockquote>
+      <div class="story-author">
+        <img src="photos/profileicon.png" alt="Ram" class="author-avatar">
+        <span>Ram, Community Leader</span>
+      </div>
+    </div>
+    <div class="story-card">
+      <img src="https://i.pinimg.com/736x/af/99/45/af99457260d60e4e544178ef105dc3a8.jpg" alt="Medical Aid" class="story-img">
+      <blockquote>
+        “The support we received saved my mother’s life. We are forever grateful to everyone who donated.”
+      </blockquote>
+      <div class="story-author">
+        <img src="photos/profileicon.png" alt="Anu" class="author-avatar">
+        <span>Anu, Daughter</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!---->
+
+<!-- Start a Campaign CTA -->
+<section class="cta-campaign">
+  <h2>Start Your Fundraiser Today</h2>
+  <p>It only takes 5 minutes to start changing lives. Your story could inspire the next wave of hope.</p>
+  <a href="#" class="cta-btn">Start a Campaign</a>
+</section>
+
+<!-- About Us Teaser -->
+<section class="about-teaser">
+  <h2>About Us</h2>
+  <p>
+    We believe everyone deserves a chance to be heard and helped.<br>
+    Our mission is to connect genuine needs with generous hearts.<br>
+    Join us in building a future where hope is always within reach.
+  </p>
+  <a href="about.html" class="about-link">Learn more about us &rarr;</a>
+</section>
+
+<!-- FAQ Teaser -->
+<section class="faq-teaser">
+  <h2>FAQs</h2>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary><strong>Is my donation secure?</strong></summary>
+      <p>Yes, all payments are encrypted and processed by trusted partners.</p>
+    </details>
+    <details class="faq-item">
+      <summary><strong>Do I need an account to donate?</strong></summary>
+      <p>No, you can donate without signing up. But creating an account lets you track your impact!</p>
+    </details>
+    <details class="faq-item">
+      <summary><strong>How quickly can I withdraw funds?</strong></summary>
+      <p>Most withdrawals are processed within 24 hours after verification.</p>
+    </details>
+    <details class="faq-item">
+      <summary><strong>Can I start a fundraiser for someone else?</strong></summary>
+      <p>Yes, you can start a fundraiser on behalf of a friend, family member, or community cause.</p>
+    </details>
+    <details class="faq-item">
+      <summary><strong>Are there any platform fees?</strong></summary>
+      <p>No, we charge 0% platform fee. All funds go directly to your cause.</p>
+    </details>
+  </div>
+  <a href="faq.html" class="faq-btn">Read all FAQs</a>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-links">
+    <a href="about.html">About</a>
+    <a href="faq.html">FAQs</a>
+    <a href="#">Contact</a>
+    <a href="#">Terms</a>
+    <a href="#">Privacy</a>
+  </div>
+  <div class="footer-social">
+    <a href="#"><img src="photos/facebook.png" alt="Facebook"></a>
+    <a href="#"><img src="photos/twitter.png" alt="Twitter"></a>
+    <a href="#"><img src="photos/instagram.png" alt="Instagram"></a>
+    <!-- Add more as needed -->
+  </div>
+  <div class="footer-tagline">
+    Together, we fund hope.
+  </div>
+  <div class="footer-credits">
+    &copy; 2025 FundFlow. All rights reserved.
+  </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
