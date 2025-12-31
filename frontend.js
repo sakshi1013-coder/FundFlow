@@ -5,7 +5,7 @@
 
 
 //why choose us
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const cards = document.querySelectorAll('.trust-carousel .trust-card');
   let current = 0;
   let intervalId;
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   // Delegate arrow events to the carousel container
-  document.querySelector('.trust-carousel').addEventListener('click', function(e) {
+  document.querySelector('.trust-carousel').addEventListener('click', function (e) {
     if (e.target.classList.contains('carousel-arrow')) {
       stopAutoSlide();
       if (e.target.classList.contains('left')) prevCard();
@@ -48,10 +48,10 @@ document.addEventListener("DOMContentLoaded", function() {
   startAutoSlide();
 });
 //campaign description character count
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const desc = document.querySelector('textarea[name="description"]');
   const count = document.getElementById('desc-count');
-  if(desc && count) {
+  if (desc && count) {
     desc.addEventListener('input', () => {
       count.textContent = desc.value.length;
     });
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Index page featured campaigns binary prefix search
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   const input = document.getElementById('homeCampaignSearch');
   if (!input || !window.SearchUtils) return;
 
@@ -92,4 +92,31 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   input.addEventListener('input', applyFilter);
+});
+
+// Scroll Reveal Animation
+document.addEventListener('DOMContentLoaded', function () {
+  const reveals = document.querySelectorAll('.reveal');
+
+  const revealOnScroll = () => {
+    const windowHeight = window.innerHeight;
+    const elementVisible = 100;
+
+    reveals.forEach((reveal) => {
+      const rect = reveal.getBoundingClientRect();
+      const elementTop = rect.top;
+      const elementBottom = rect.bottom;
+
+      // Check if element is visible in the viewport
+      if (elementTop < windowHeight - elementVisible && elementBottom > elementVisible) {
+        reveal.classList.add('active');
+      } else {
+        reveal.classList.remove('active');
+      }
+    });
+  };
+
+  window.addEventListener('scroll', revealOnScroll);
+  // Trigger once on load
+  revealOnScroll();
 });
